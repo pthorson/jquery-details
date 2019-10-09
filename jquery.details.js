@@ -67,11 +67,20 @@
 	// Execute the fallback only if there’s no native `details` support
 	if (isDetailsSupported) {
 
-		details = proto.details = function() {
+		details = proto.details = function(op) {
 
 			return this.each(function(index) {
 				var $details = $(this),
 				    $summary = $('summary', $details).first();
+
+				if (op === 'open') {
+					$details.prop('open', 'open');
+					return;
+				} else if (op === 'close') {
+					$details.prop('open', false);
+					return;
+				}
+
 				// If `$details` doesn’t already have one, assign a generated `id` for
 				// `aria-controls` on the `<summary>` to reference.
 				if (!$details.attr('id')) {
@@ -96,7 +105,7 @@
 
 	} else {
 
-		details = proto.details = function() {
+		details = proto.details = function(op) {
 
 			// Loop through all `details` elements
 			return this.each(function(index) {
@@ -114,6 +123,16 @@
 					$details.attr('id', 'details-id-' + index);
 				}
 				$details.attr('role', 'group');
+				if (op === 'open') {
+					$details.prop('open', true);
+					toggleOpen($details, $detailsSummary, $detailsNotSummary);
+					return;
+				} else if (op === 'close') {
+					$details.prop('open', false);
+					toggleOpen($details, $detailsSummary, $detailsNotSummary);
+					return;
+				}
+
 				// If there is no `summary` in the current `details` element…
 				if (!$detailsSummary.length) {
 					// …create one with default text
