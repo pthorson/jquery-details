@@ -2,6 +2,8 @@
 
 This plugin polyfills `<details>`/`<summary>` HTML elements and adds [the appropriate ARIA annotations](http://mathiasbynens.be/notes/html5-details-jquery#comment-58) for optimal accessibility. [More information can be found in my blog post on the subject.](http://mathiasbynens.be/notes/html5-details-jquery)
 
+Edit: This fork merges a number of Pull requests and updates from other forks of the original including support for `.details("open")` and `.details("close")` functions. Mostly tested with IE11 and latest Chrome.
+
 ## Demo & Examples
 
 <http://mathiasbynens.be/demo/html5-details-jquery>
