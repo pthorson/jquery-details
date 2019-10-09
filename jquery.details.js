@@ -35,11 +35,11 @@
 	    	var isOpen = $details.prop('open'),
 	    	    close = isOpen && toggle || !isOpen && !toggle;
 	    	if (close) {
-	    		$details.removeClass('open').prop('open', false).triggerHandler('close.details');
+	    		$details.removeClass('open').prop('open', false).removeAttr("open").triggerHandler('close.details');
 	    		$detailsSummary.attr('aria-expanded', false);
 	    		$detailsNotSummary.hide();
 	    	} else {
-	    		$details.addClass('open').prop('open', true).triggerHandler('open.details');
+	    		$details.addClass('open').prop('open', true).attr("open", "open").triggerHandler('open.details');
 	    		$detailsSummary.attr('aria-expanded', true);
 	    		$detailsNotSummary.show();
 	    	}
@@ -72,12 +72,16 @@
 			return this.each(function(index) {
 				var $details = $(this),
 				    $summary = $('summary', $details).first();
-
+				// if called for open or close, toggle and return
 				if (op === 'open') {
 					$details.prop('open', 'open');
+					$summary.attr('aria-expanded', true);
+					$details.triggerHandler('open.details');
 					return;
 				} else if (op === 'close') {
 					$details.prop('open', false);
+					$summary.attr('aria-expanded', false);
+					$details.triggerHandler('close.details');
 					return;
 				}
 
@@ -118,11 +122,7 @@
 				    $detailsNotSummary = $details.children(':not(summary)'),
 				    // This will be used later to look for direct child text nodes
 				    $detailsNotSummaryContents = $details.contents(':not(summary)');
-				//assign a generated @id to the details element for reference by @aria-controls on the summary
-				if (!$details.attr('id')) {
-					$details.attr('id', 'details-id-' + index);
-				}
-				$details.attr('role', 'group');
+				// if called for open or close, toggle and return
 				if (op === 'open') {
 					$details.prop('open', true);
 					toggleOpen($details, $detailsSummary, $detailsNotSummary);
@@ -132,6 +132,11 @@
 					toggleOpen($details, $detailsSummary, $detailsNotSummary);
 					return;
 				}
+				//assign a generated @id to the details element for reference by @aria-controls on the summary
+				if (!$details.attr('id')) {
+					$details.attr('id', 'details-id-' + index);
+				}
+				$details.attr('role', 'group');
 
 				// If there is no `summary` in the current `details` element…
 				if (!$detailsSummary.length) {
